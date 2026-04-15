@@ -60,6 +60,9 @@
         .pricing-val { font-family: 'Space Grotesk', sans-serif; font-size: 4rem; color: #fff; font-weight: 700; }
         .pricing-val span { font-size: 1.5rem; opacity: 0.6; font-weight: 400; }
 
+        .pricing-benefits { display: flex; justify-content: center; gap: 40px; margin-top: 25px; font-size: 1rem; color: #fff; font-family:'Space Grotesk'; }
+        .pricing-benefits span { white-space: nowrap; }
+
         /* Tables & Comparison */
         .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
         .comp-box { padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
@@ -197,6 +200,10 @@
             .slide h1 { font-size: 1.8rem !important; }
             .pricing-single-box { padding: 20px; }
             .pricing-val { font-size: 2.2rem; }
+            .pricing-benefits { flex-direction: column; align-items: center; gap: 10px; }
+            .pricing-benefits span { white-space: normal; text-align: center; }
+            .slide h2 { font-size: 1.6rem !important; }
+            
             .stats-grid { grid-template-columns: 1fr !important; gap: 10px; }
             .stat-card { padding: 20px; }
             .comparison-grid { grid-template-columns: 1fr !important; }
@@ -334,7 +341,7 @@
                         <h2 style="font-family:'Space Grotesk'; color:var(--nexus-cyan); font-size:2.5rem; font-weight:700;">Plano Agência IA Dedicada</h2>
                         <div class="pricing-val">R$ 3.497 <span>/mês</span></div>
                         <p style="color: rgba(255,255,255,0.7); font-family:'Space Grotesk'; font-weight: 700; letter-spacing: 1px; margin-top: 10px;">SETUP TÉCNICO ONBOARDING: R$ 5.000 (Taxa Única)</p>
-                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 25px; font-size: 1rem; color: #fff; font-family:'Space Grotesk';">
+                        <div class="pricing-benefits">
                             <span>■ Agentes Ilimitados</span>
                             <span>■ Manutenção & Tunning</span>
                             <span>■ Acesso aos Robôs Novos</span>
