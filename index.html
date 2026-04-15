@@ -343,9 +343,16 @@
                     <div class="form-group">
                         <label>Vigência do Contrato</label>
                         <select id="cVigencia">
-                            <option value="12 (doze) meses">12 meses</option>
-                            <option value="6 (seis) meses">6 meses</option>
-                            <option value="3 (três) meses">3 meses</option>
+                            <option value="12">12 meses</option>
+                            <option value="6">6 meses</option>
+                            <option value="3">3 meses</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Forma de Pagamento</label>
+                        <select id="cMetodoPagamento">
+                            <option value="PIX">PIX (Setup à vista + Mensalidade)</option>
+                            <option value="CARTAO">Cartão de Crédito (Mensalidade + Setup Diluído)</option>
                         </select>
                     </div>
                 </div>
@@ -366,18 +373,40 @@
 
             <!-- STEP 3: PAYMENT -->
             <div id="paymentStep" style="display: none; text-align: center; color: #fff; padding-top: 30px;">
-                <span class="label">PAGAMENTO</span>
-                <h1 style="font-size: 2.5rem;">Setup de <span>Onboarding</span></h1>
-                <p style="margin-bottom: 40px;">Efetue o pagamento da taxa de setup para iniciarmos o seu ecossistema IA.</p>
-                
-                <div style="background: rgba(255,255,255,0.05); padding: 50px; border-radius: 15px; border: 1px solid var(--nexus-cyan); display: inline-block; text-align: center;">
-                    <p style="color: #fff; font-size: 1.2rem; margin-bottom: 15px;">Setup Técnico Nexus (Taxa Única): <strong>R$ 5.000,00</strong></p>
-                    <h3 style="font-family: 'Space Grotesk', sans-serif; color: var(--nexus-cyan); font-size: 1.5rem; margin-bottom: 20px;">Chave PIX (CNPJ)</h3>
-                    <p style="font-size: 2.2rem; font-family: 'Inter', monospace; letter-spacing: 2px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px;">00.000.000/0001-00</p>
-                    <p style="color: #888; font-size: 0.95rem; margin-top: 20px; line-height: 1.6;">Favorecido: Nexus AI Systems Ltda.<br>Instituição: Cora / Banco do Brasil</p>
+                <div id="pixPaymentInfo">
+                    <span class="label">PAGAMENTO VIA PIX</span>
+                    <h1 style="font-size: 2.5rem;">Setup de <span>Onboarding</span></h1>
+                    <p style="margin-bottom: 40px;">Efetue o pagamento da taxa de setup para iniciarmos o seu ecossistema IA.</p>
+                    
+                    <div style="background: rgba(255,255,255,0.05); padding: 50px; border-radius: 15px; border: 1px solid var(--nexus-cyan); display: inline-block; text-align: center;">
+                        <p style="color: #fff; font-size: 1.2rem; margin-bottom: 15px;">Setup Técnico Nexus (Taxa Única): <strong>R$ 5.000,00</strong></p>
+                        <h3 style="font-family: 'Space Grotesk', sans-serif; color: var(--nexus-cyan); font-size: 1.5rem; margin-bottom: 20px;">Chave PIX (CNPJ)</h3>
+                        <p style="font-size: 2.2rem; font-family: 'Inter', monospace; letter-spacing: 2px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px;">00.000.000/0001-00</p>
+                        <p style="color: #888; font-size: 0.95rem; margin-top: 20px; line-height: 1.6;">Favorecido: Nexus AI Systems Ltda.<br>Instituição: Cora / Banco do Brasil</p>
+                    </div>
+                    
+                    <button class="btn-generate" style="margin-top: 50px; width: auto; padding: 15px 50px; display: inline-block;" onclick="closeContract(); alert('Parabéns pela decisão! Nosso time técnico entrará em contato para iniciar o Mapeamento D01 assim que o pagamento for compensado.')">FINALIZAR E ENVIAR COMPROVANTE</button>
                 </div>
-                
-                <button class="btn-generate" style="margin-top: 50px; width: auto; padding: 15px 50px; display: inline-block;" onclick="closeContract(); alert('Parabéns pela decisão! Nosso time técnico entrará em contato para iniciar o Mapeamento D01 assim que o pagamento for compensado.')">FINALIZAR INSCRIÇÃO</button>
+
+                <div id="cardPaymentInfo" style="display: none;">
+                    <span class="label">ASSINATURA RECORRENTE</span>
+                    <h1 style="font-size: 2.5rem;">Checkout <span>Cartão de Crédito</span></h1>
+                    <p style="margin-bottom: 40px;">Sua assinatura inclui a mensalidade operacional + o setup diluído (sem juros).</p>
+                    
+                    <div style="background: rgba(123,97,255,0.05); padding: 50px; border-radius: 15px; border: 1px solid var(--nexus-purple); display: inline-block; text-align: center; max-width: 600px;">
+                        <p id="cardSummaryTitle" style="color: #fff; font-size: 1.3rem; margin-bottom: 10px; font-weight: 700;">Plano Agência IA Dedicada</p>
+                        <p id="cardSummaryVal" style="color: var(--nexus-cyan); font-size: 2.8rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700;">R$ 0,00 <span style="font-size: 1rem; opacity: 0.6;">/mês</span></p>
+                        <p id="cardSummarySetup" style="color: #888; font-size: 0.9rem; margin-top: 10px;">(Incluso Setup parcelado em X vezes)</p>
+                        
+                        <div style="margin-top: 30px; text-align: left; background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; font-size: 0.85rem; color: #a0a0b0;">
+                            <p>■ Cobrança automática recorrente</p>
+                            <p>■ Sem bloqueio de limite total do cartão (modelo assinatura)</p>
+                            <p>■ Recibo enviado mensalmente por e-mail</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn-generate" style="margin-top: 50px; width: auto; padding: 15px 60px; display: inline-block;" onclick="window.open('https://checkout.nexusai.systems/pagamento', '_blank')">IR PARA CHECKOUT SEGURO</button>
+                </div>
             </div>
 
         </div>
@@ -446,10 +475,35 @@
             const tel = document.getElementById('cTelefone').value || '[TELEFONE]';
             const end = document.getElementById('cEndereco').value || '[ENDEREÇO]';
             const plano = document.getElementById('cPlano').value;
-            const vigencia = document.getElementById('cVigencia').value;
+            const vigenciaNum = parseInt(document.getElementById('cVigencia').value);
+            const vigenciaTexto = vigenciaNum + (vigenciaNum === 1 ? ' (um) mês' : ' (doze) meses'); // ajuste simplificado
+            const metodo = document.getElementById('cMetodoPagamento').value;
             const hoje = getToday();
 
-            const html = `
+            // Cálculo dos valores
+            const setupTotal = 5000;
+            const mensalBase = 3497;
+            let clausulaPagamento = '';
+            let valorMensalFinal = mensalBase;
+
+            if (metodo === 'PIX') {
+                clausulaPagamento = `
+                    <p><strong>Mensalidade:</strong> R$ 3.497,00 (três mil quatrocentos e noventa e sete reais), com vencimento todo dia 10 de cada mês subsequente ao início da prestação dos serviços.</p>
+                    <p><strong>Setup Técnico (Taxa Única):</strong> R$ 5.000,00 (cinco mil reais), a ser pago antes do início do onboarding (D01) via transferência PIX.</p>
+                `;
+            } else {
+                const setupParcela = setupTotal / vigenciaNum;
+                valorMensalFinal = mensalBase + setupParcela;
+                clausulaPagamento = `
+                    <p><strong>Pagamento Recorrente:</strong> R$ ${valorMensalFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} (mensais), contemplando a mensalidade de serviços (R$ 3.497,00) acrescida da diluição da Taxa de Setup Técnico (R$ 5.000,00) parcelada em ${vigenciaNum} vezes sem juros.</p>
+                    <p>O pagamento será realizado via Cartão de Crédito recorrente, com a primeira cobrança efetuada na data de aceite deste termo.</p>
+                `;
+            }
+
+            // Armazenar valor para o passo de pagamento
+            window.finalPaymentValue = valorMensalFinal;
+            window.finalPaymentMethod = metodo;
+            window.finalVigencia = vigenciaNum;
                 <h2>TERMO DE ACEITE E PRESTAÇÃO DE SERVIÇOS<br>DE INTELIGÊNCIA ARTIFICIAL</h2>
                 <p class="contract-subtitle">Nexus AI Systems — N° ${Date.now().toString(36).toUpperCase()}</p>
 
@@ -469,12 +523,11 @@
 
                 <h3>CLÁUSULA 4 — DO PLANO E INVESTIMENTO</h3>
                 <p>Plano contratado: <span class="highlight-field">${plano}</span></p>
-                <p><strong>Mensalidade:</strong> R$ 3.497,00 (três mil quatrocentos e noventa e sete reais), com vencimento todo dia 10 de cada mês subsequente ao início da prestação dos serviços.</p>
-                <p><strong>Setup Técnico (Taxa Única):</strong> R$ 5.000,00 (cinco mil reais), a ser pago antes do início do onboarding (D01).</p>
+                ${clausulaPagamento}
                 <p>Os valores poderão ser reajustados anualmente pelo IGPM/FGV ou índice substituto equivalente.</p>
 
                 <h3>CLÁUSULA 5 — DA VIGÊNCIA</h3>
-                <p>O presente contrato terá vigência de <span class="highlight-field">${vigencia}</span>, contados a partir da data de assinatura, renovando-se automaticamente por períodos iguais e sucessivos, salvo manifestação contrária de qualquer das partes com antecedência mínima de 30 (trinta) dias.</p>
+                <p>O presente contrato terá vigência de <span class="highlight-field">${vigenciaNum} meses</span>, contados a partir da data de assinatura, renovando-se automaticamente por períodos iguais e sucessivos, salvo manifestação contrária de qualquer das partes com antecedência mínima de 30 (trinta) dias.</p>
 
                 <h3>CLÁUSULA 6 — DO ONBOARDING E ENTREGA</h3>
                 <p>Após a assinatura e pagamento do setup, a NEXUS iniciará o processo de implantação conforme o seguinte cronograma estimado:<br>
@@ -517,6 +570,18 @@
         function goToPayment() {
             document.getElementById('contractPreviewStep').classList.remove('active');
             document.getElementById('paymentStep').style.display = 'block';
+            
+            if (window.finalPaymentMethod === 'PIX') {
+                document.getElementById('pixPaymentInfo').style.display = 'block';
+                document.getElementById('cardPaymentInfo').style.display = 'none';
+            } else {
+                document.getElementById('pixPaymentInfo').style.display = 'none';
+                document.getElementById('cardPaymentInfo').style.display = 'block';
+                
+                const valStr = window.finalPaymentValue.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'});
+                document.getElementById('cardSummaryVal').innerText = valStr + ' /mês';
+                document.getElementById('cardSummarySetup').innerText = `(Incluso Setup parcelado em ${window.finalVigencia} vezes sem juros)`;
+            }
         }
 
         function printContract() {
