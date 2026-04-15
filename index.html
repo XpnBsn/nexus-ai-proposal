@@ -350,7 +350,7 @@
                     </div>
                 </div>
 
-                <button class="btn-generate" id="btnGenerate" onclick="generateContract()">GERAR CONTRATO</button>
+                <button class="btn-generate" id="btnGenerate" onclick="generateContract()">GERAR TERMO DE ACEITE</button>
             </div>
 
             <!-- STEP 2: CONTRACT PREVIEW -->
@@ -362,6 +362,22 @@
                     <button class="btn-back" onclick="backToForm()">← VOLTAR AO FORMULÁRIO</button>
                     <button class="btn-print" onclick="printContract()">IMPRIMIR / SALVAR PDF</button>
                 </div>
+            </div>
+
+            <!-- STEP 3: PAYMENT -->
+            <div id="paymentStep" style="display: none; text-align: center; color: #fff; padding-top: 30px;">
+                <span class="label">PAGAMENTO</span>
+                <h1 style="font-size: 2.5rem;">Setup de <span>Onboarding</span></h1>
+                <p style="margin-bottom: 40px;">Efetue o pagamento da taxa de setup para iniciarmos o seu ecossistema IA.</p>
+                
+                <div style="background: rgba(255,255,255,0.05); padding: 50px; border-radius: 15px; border: 1px solid var(--nexus-cyan); display: inline-block; text-align: center;">
+                    <p style="color: #fff; font-size: 1.2rem; margin-bottom: 15px;">Setup Técnico Nexus (Taxa Única): <strong>R$ 5.000,00</strong></p>
+                    <h3 style="font-family: 'Space Grotesk', sans-serif; color: var(--nexus-cyan); font-size: 1.5rem; margin-bottom: 20px;">Chave PIX (CNPJ)</h3>
+                    <p style="font-size: 2.2rem; font-family: 'Inter', monospace; letter-spacing: 2px; border-bottom: 1px dashed rgba(255,255,255,0.2); padding-bottom: 10px;">00.000.000/0001-00</p>
+                    <p style="color: #888; font-size: 0.95rem; margin-top: 20px; line-height: 1.6;">Favorecido: Nexus AI Systems Ltda.<br>Instituição: Cora / Banco do Brasil</p>
+                </div>
+                
+                <button class="btn-generate" style="margin-top: 50px; width: auto; padding: 15px 50px; display: inline-block;" onclick="closeContract(); alert('Parabéns pela decisão! Nosso time técnico entrará em contato para iniciar o Mapeamento D01 assim que o pagamento for compensado.')">FINALIZAR INSCRIÇÃO</button>
             </div>
 
         </div>
@@ -434,8 +450,8 @@
             const hoje = getToday();
 
             const html = `
-                <h2>CONTRATO DE PRESTAÇÃO DE SERVIÇOS<br>DE INTELIGÊNCIA ARTIFICIAL</h2>
-                <p class="contract-subtitle">Nexus AI Systems — Contrato N° ${Date.now().toString(36).toUpperCase()}</p>
+                <h2>TERMO DE ACEITE E PRESTAÇÃO DE SERVIÇOS<br>DE INTELIGÊNCIA ARTIFICIAL</h2>
+                <p class="contract-subtitle">Nexus AI Systems — N° ${Date.now().toString(36).toUpperCase()}</p>
 
                 <h3>CLÁUSULA 1 — DAS PARTES</h3>
                 <p><strong>CONTRATADA:</strong> NEXUS AI SYSTEMS, pessoa jurídica de direito privado, doravante denominada simplesmente <strong>"NEXUS"</strong>.</p>
@@ -476,22 +492,31 @@
                 <h3>CLÁUSULA 9 — DO FORO</h3>
                 <p>As partes elegem o foro da Comarca de Curitiba/PR para dirimir quaisquer controvérsias oriundas do presente instrumento, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
 
-                <p style="margin-top: 30px;">E, por estarem de acordo, as partes assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</p>
-                <p style="text-align: center; margin-top: 15px;">Curitiba/PR, <span class="highlight-field">${hoje}</span>.</p>
+                <p style="margin-top: 30px;">O aceite eletrônico deste termo através do botão abaixo possui validade legal e substitui a assinatura física, estando as partes de acordo com todas as cláusulas dispostas acima.</p>
 
-                <div class="signature-area">
-                    <div>
-                        <div class="sig-line">NEXUS AI SYSTEMS<br><small>Contratada</small></div>
-                    </div>
-                    <div>
-                        <div class="sig-line">${rep}<br><small>${razao}<br>Contratante</small></div>
-                    </div>
+                <div style="background: rgba(123,97,255,0.05); border: 1px solid rgba(123,97,255,0.3); padding: 30px; border-radius: 10px; margin-top: 40px; text-align: center;">
+                    <label style="display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font-size: 1.1rem; color: #111;">
+                        <input type="checkbox" id="acceptCheckbox" style="width: 20px; height: 20px;" onchange="
+                            document.getElementById('btnPayment').disabled = !this.checked;
+                            document.getElementById('btnPayment').style.opacity = this.checked ? '1' : '0.5';
+                            document.getElementById('btnPayment').style.transform = this.checked ? 'scale(1.05)' : 'scale(1)';
+                        ">
+                        Declaro que li e aceito os termos do contrato em nome de <strong>${razao}</strong>.
+                    </label>
+                    <button onclick="goToPayment()" id="btnPayment" style="margin-top: 25px; padding: 18px 40px; background: #7B61FF; color: #fff; border: none; border-radius: 8px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; opacity: 0.5; transition: 0.3s;" disabled>ACEITAR TERMO E IR PARA PAGAMENTO</button>
+                    <p style="color: #666; font-size: 0.75rem; margin-top: 15px;">Ao clicar no botão, este documento será registrado sob o IP solicitante e a data de ${hoje}.</p>
                 </div>
             `;
 
             document.getElementById('contractDocument').innerHTML = html;
             document.getElementById('contractFormStep').style.display = 'none';
+            document.getElementById('paymentStep').style.display = 'none';
             document.getElementById('contractPreviewStep').classList.add('active');
+        }
+
+        function goToPayment() {
+            document.getElementById('contractPreviewStep').classList.remove('active');
+            document.getElementById('paymentStep').style.display = 'block';
         }
 
         function printContract() {
