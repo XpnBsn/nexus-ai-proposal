@@ -190,9 +190,16 @@
             .pricing-val { font-size: 3rem; }
             
             .controls { 
-                bottom: 90px; 
-                right: 20px; 
+                display: none; /* Esconde setas no celular para não cobrir conteúdo */
             }
+
+            /* Ajustes finos para slides de conteúdo denso (S6 e S7) */
+            .slide h1 { font-size: 1.8rem !important; }
+            .pricing-single-box { padding: 20px; }
+            .pricing-val { font-size: 2.2rem; }
+            .stats-grid { grid-template-columns: 1fr !important; gap: 10px; }
+            .stat-card { padding: 20px; }
+            .comparison-grid { grid-template-columns: 1fr !important; }
             
             /* Modal / Contract */
             .modal-container { padding: 30px 20px; }
