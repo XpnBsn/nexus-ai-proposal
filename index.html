@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposta Comercial — Nexus AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --nexus-cyan: #00E5A0;
+            --nexus-purple: #7B61FF;
+            --nexus-dark: #0a0a0f;
+            --nexus-card: #13131a;
+            --nexus-light: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --gradient: linear-gradient(135deg, #7B61FF 0%, #00E5A0 100%);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--nexus-dark); color: var(--nexus-light); font-family: 'Inter', sans-serif; overflow: hidden; height: 100vh; }
+
+        .app-wrapper { display: flex; width: 100vw; height: 100vh; }
+        
+        /* Lateral Navigation */
+        .sidebar { width: 90px; background: rgba(0,0,0,0.6); border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; padding: 30px 0; gap: 15px; z-index: 100; overflow-y: auto; }
+        .nav-dot { width: 45px; height: 45px; border-radius: 12px; background: rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.3s; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #555; font-size: 0.9rem; }
+        .nav-dot.active { background: var(--gradient); color: var(--nexus-dark); transform: scale(1.1); box-shadow: 0 0 20px rgba(123,97,255,0.4); }
+        .nav-dot:hover { background: rgba(123,97,255,0.2); color: #fff; }
+
+        /* Main Viewport */
+        .viewport { flex-grow: 1; position: relative; display: flex; align-items: center; justify-content: center; padding: 30px; }
+        .slide {
+            position: absolute; width: 95%; max-width: 1400px; height: 90vh; background: var(--nexus-card); border-radius: 20px; 
+            padding: 70px 90px; border: 1px solid rgba(255,255,255,0.05); opacity: 0; pointer-events: none;
+            transform: translateX(30px) scale(0.98); transition: all 0.7s cubic-bezier(0.19, 1, 0.22, 1);
+            display: flex; flex-direction: column; justify-content: center;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+        .slide.active { opacity: 1; pointer-events: all; transform: translateX(0) scale(1); }
+
+        h1 { font-family: 'Space Grotesk', sans-serif; font-size: 3.8rem; margin-bottom: 20px; color: #fff; line-height: 1.1; font-weight: 700; letter-spacing: -1px; }
+        h1 span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: #a0a0b0; font-size: 1.1rem; line-height: 1.6; max-width: 800px;}
+        .label { color: var(--nexus-cyan); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 10px; display: block; }
+
+        /* Branding */
+        .brand-logo { position: absolute; top: 40px; right: 50px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; color: #fff; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; }
+        .brand-icon { width: 20px; height: 20px; background: var(--gradient); border-radius: 5px; }
+
+        /* Stats & Cards */
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 30px; }
+        .stat-card { background: var(--glass); padding: 30px; border-radius: 15px; border-bottom: 4px solid var(--nexus-purple); text-align: center; transition: 0.3s; }
+        .stat-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.06); }
+        .stat-val { font-family: 'Space Grotesk', sans-serif; font-size: 2.5rem; display: block; color: #fff; font-weight: 700; }
+        .stat-name { color: var(--nexus-cyan); font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 700; margin-top: 10px; text-transform: uppercase; letter-spacing: 1px; }
+
+        .pricing-single-box { background: rgba(123,97,255,0.05); border: 1px solid rgba(123,97,255,0.3); border-radius: 20px; padding: 40px; margin-top: 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .pricing-val { font-family: 'Space Grotesk', sans-serif; font-size: 4rem; color: #fff; font-weight: 700; }
+        .pricing-val span { font-size: 1.5rem; opacity: 0.6; font-weight: 400; }
+
+        /* Tables & Comparison */
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .comp-box { padding: 40px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        .comp-old { background: rgba(255, 74, 74, 0.05); border-left: 4px solid #ff4a4a; }
+        .comp-new { background: rgba(0, 229, 160, 0.05); border-left: 4px solid var(--nexus-cyan); }
+        
+        .benefit-list { list-style: none; margin-top: 20px; }
+        .benefit-list li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 1.05rem; color: #fff; }
+        .benefit-list.x-list li::before { content: '✕'; color: #ff4a4a; font-weight: 900; }
+        .benefit-list.check-list li::before { content: '■'; color: var(--nexus-cyan); font-size: 0.8rem; }
+
+        /* Controls */
+        .controls { position: fixed; bottom: 40px; right: 80px; display: flex; gap: 15px; z-index: 200; }
+        .btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); width: 50px; height: 50px; border-radius: 12px; cursor: pointer; color: #fff; font-weight: 900; box-shadow: 0 10px 20px rgba(0,0,0,0.3); transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+        .btn:hover { background: var(--gradient); border-color: transparent; color: var(--nexus-dark); transform: translateY(-3px); box-shadow: 0 15px 30px rgba(123,97,255,0.2); }
+
+        /* ===== CONTRACT MODAL ===== */
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); z-index: 9999; display: none; align-items: center; justify-content: center; }
+        .modal-overlay.active { display: flex; }
+        .modal-container { width: 95%; max-width: 900px; max-height: 92vh; background: var(--nexus-card); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; overflow-y: auto; padding: 50px; position: relative; }
+        .modal-close { position: absolute; top: 20px; right: 25px; background: none; border: none; color: #555; font-size: 2rem; cursor: pointer; transition: 0.2s; font-family: 'Space Grotesk', sans-serif; }
+        .modal-close:hover { color: #fff; }
+
+        /* Form */
+        .contract-form { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        .contract-form .full-width { grid-column: 1 / -1; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+        .form-group label { font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; color: var(--nexus-cyan); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; }
+        .form-group input, .form-group select { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 14px 18px; color: #fff; font-family: 'Inter', sans-serif; font-size: 0.95rem; outline: none; transition: 0.3s; }
+        .form-group input:focus, .form-group select:focus { border-color: var(--nexus-purple); box-shadow: 0 0 15px rgba(123,97,255,0.15); }
+        .form-group input::placeholder { color: #555; }
+        .form-group select option { background: var(--nexus-card); color: #fff; }
+
+        .btn-generate { display: block; width: 100%; margin-top: 30px; padding: 18px; background: var(--gradient); border: none; border-radius: 8px; color: var(--nexus-dark); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.1rem; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.2s; }
+        .btn-generate:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(123,97,255,0.3); }
+        .btn-generate:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        /* Generated Contract */
+        .contract-preview { display: none; margin-top: 30px; }
+        .contract-preview.active { display: block; }
+        .contract-document { background: #fff; color: #111; padding: 60px; border-radius: 10px; font-family: 'Inter', sans-serif; font-size: 0.85rem; line-height: 1.8; }
+        .contract-document h2 { font-family: 'Space Grotesk', sans-serif; color: #111; text-align: center; font-size: 1.5rem; margin-bottom: 5px; }
+        .contract-document .contract-subtitle { text-align: center; color: #666; font-size: 0.8rem; margin-bottom: 30px; }
+        .contract-document h3 { font-family: 'Space Grotesk', sans-serif; color: #333; margin-top: 25px; margin-bottom: 10px; font-size: 1rem; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .contract-document p { margin-bottom: 10px; text-align: justify; }
+        .contract-document .highlight-field { font-weight: 700; color: #7B61FF; }
+        .contract-document .signature-area { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 50px; padding-top: 20px; text-align: center; }
+        .contract-document .sig-line { border-top: 1px solid #333; padding-top: 10px; margin-top: 60px; font-size: 0.8rem; color: #555; }
+
+        .btn-actions { display: flex; gap: 15px; margin-top: 25px; }
+        .btn-print { flex: 1; padding: 16px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-print:hover { background: rgba(255,255,255,0.1); }
+        .btn-back { flex: 1; padding: 16px; background: none; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; color: #888; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.2s; text-transform: uppercase; letter-spacing: 1px; }
+        .btn-back:hover { color: #fff; border-color: rgba(255,255,255,0.3); }
+
+
+    </style>
+</head>
+<body>
+
+    <div class="app-wrapper">
+        <aside class="sidebar" id="sidebar">
+            <!-- Navigation points generated by JS -->
+        </aside>
+
+        <main class="viewport">
+            <div class="brand-logo"><div class="brand-icon"></div> NEXUS AI</div>
+
+            <!-- SLIDE 1: COVER -->
+            <div class="slide active">
+                <span class="label">TRANSFORMAÇÃO DIGITAL</span>
+                <h1 style="font-size: 4.8rem;">Sua empresa,<br><span>10x mais rápida.</span></h1>
+                <p>Proposta comercial de implementação de Inteligência Artificial Operacional.</p>
+                <div style="margin-top: 50px; display:flex; gap: 20px;">
+                    <div style="padding: 15px 40px; background: var(--gradient); color: var(--nexus-dark); border-radius: 5px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; text-transform: uppercase;">PROPOSTA B2B</div>
+                </div>
+            </div>
+
+            <!-- SLIDE 2: O PROBLEMA -->
+            <div class="slide">
+                <span class="label">O GARGALO DA OPERAÇÃO</span>
+                <h1>O Custo do <span>Crescimento</span>.</h1>
+                <p>Atualmente, escalar o seu negócio significa contratar mais pessoas, alugar mais espaço e gerenciar mais processos manuais. Isso afeta o seu lucro diretamente:</p>
+                <div class="stats-grid">
+                    <div class="stat-card" style="border-bottom-color:#ff4a4a"><span class="stat-val">R$ 5k+</span><span class="stat-name">Custo de 1 SDR por Mês</span></div>
+                    <div class="stat-card" style="border-bottom-color:#ff4a4a"><span class="stat-val">10h</span><span class="stat-name">Tempo de Resposta a Leads</span></div>
+                    <div class="stat-card" style="border-bottom-color:#ff4a4a"><span class="stat-val">22 dias</span><span class="stat-name">Dias Úteis de Trabalho</span></div>
+                    <div class="stat-card" style="border-bottom-color:#ff4a4a"><span class="stat-val">Alta</span><span class="stat-name">Taxa de Erro Humano</span></div>
+                </div>
+            </div>
+
+            <!-- SLIDE 3: A SOLUÇÃO -->
+            <div class="slide">
+                <span class="label">A ABORDAGEM NEXUS</span>
+                <h1>Seu <span>Funcionário Infinito</span>.</h1>
+                <p>A Nexus AI funciona como uma agência 100% autônoma dentro do seu negócio. Nossos Agentes de IA são treinados com as regras da sua empresa para operar 24 horas por dia.</p>
+                <div class="comparison-grid">
+                    <div class="comp-box comp-old">
+                        <h3 style="font-family:'Space Grotesk'; color:#ff4a4a; font-size:1.8rem;">O Modelo Antigo</h3>
+                        <ul class="benefit-list x-list">
+                            <li>Requer treinamento caro e onboarding sênior.</li>
+                            <li>Trabalha 8 horas por dia e descansa aos fins de semana.</li>
+                            <li>Demora para responder leads de madrugada/feriados.</li>
+                            <li>Salários, impostos e passivos trabalhistas.</li>
+                        </ul>
+                    </div>
+                    <div class="comp-box comp-new">
+                        <h3 style="font-family:'Space Grotesk'; color:var(--nexus-cyan); font-size:1.8rem;">O Modelo Nexus</h3>
+                        <ul class="benefit-list check-list">
+                            <li>Onboarding instantâneo e resposta em milissegundos.</li>
+                            <li>Operação silenciosa 24 horas por dia, 7 dias por semana.</li>
+                            <li>Coleta e qualifica 1.000 leads simultaneamente.</li>
+                            <li>Uma assinatura única de serviço, zero taxas ocultas.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 4: ENTREGÁVEIS -->
+            <div class="slide">
+                <span class="label">AS FERRAMENTAS</span>
+                <h1>Robôs ao seu <span>Serviço</span>.</h1>
+                <p>Nós desenhamos, hospedamos e mantemos uma frota de inteligências prontas para agir pelas suas metas.</p>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-val" style="font-size: 1.5rem;">SDR / Vendas</span>
+                        <p style="font-size: 0.85rem; color: #888; font-family:'Inter'; margin-top: 15px;">Robô treinado com o seu pitch que responde instantaneamente, quebra objeções e agenda reuniões no seu calendário via WhatsApp.</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-val" style="font-size: 1.5rem;">Social Media</span>
+                        <p style="font-size: 0.85rem; color: #888; font-family:'Inter'; margin-top: 15px;">Criação autônoma de conteúdo, legendas e rotinas de postagem para o Instagram da sua empresa se manter vivo.</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-val" style="font-size: 1.5rem;">FAQ Total</span>
+                        <p style="font-size: 0.85rem; color: #888; font-family:'Inter'; margin-top: 15px;">Um assistente de suporte que sabe todos os detalhes contratuais e técnicos do seu negócio, tirando a carga da equipe humana.</p>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color:var(--nexus-cyan)">
+                        <span class="stat-val" style="font-size: 1.5rem;">Módulos Extras</span>
+                        <p style="font-size: 0.85rem; color: #888; font-family:'Inter'; margin-top: 15px;">SEO Blogs, Automações de e-mail e triagem documental.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 5: NOSSO DIFERENCIAL -->
+            <div class="slide">
+                <span class="label">O NOSSO MODELO</span>
+                <h1>Sem limites. <span>Sem dor de cabeça.</span></h1>
+                <div class="pricing-single-box">
+                    <div>
+                        <h4 style="color:var(--nexus-cyan); font-family:'Space Grotesk'; font-size:1.8rem; font-weight:700;">Tecnologia RaaS</h4>
+                        <p style="font-size:0.95rem; margin-top:10px; color:#a0a0b0; line-height: 1.8;">
+                            Robots as a Service: Nossa infraestrutura roda o show. Você não precisa comprar plataformas, nem entender de programação. 
+                            <br><br>
+                            Nós fornecemos todo o poder computacional e as atualizações. Você paga simplesmente pelo pacote do nosso serviço mensal, focando unicamente nos lucros.
+                        </p>
+                    </div>
+                    <div>
+                        <h4 style="color:var(--nexus-cyan); font-family:'Space Grotesk'; font-size:1.8rem; font-weight:700;">Volume Ilimitado</h4>
+                        <ul class="benefit-list check-list">
+                            <li>Sem cobrança "por robô". O serviço cobre a infra.</li>
+                            <li>SLA (Atendimento e Suporte Premium).</li>
+                            <li>Tunning contínuo dos Agentes pelo nosso time.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 6: INVESTIMENTO -->
+            <div class="slide">
+                <span class="label">PROPOSTA FINANCEIRA</span>
+                <h1>O Investimento <span>NEXUS</span>.</h1>
+                <div class="pricing-single-box" style="grid-template-columns: 1fr;">
+                    <div style="text-align: center;">
+                        <h2 style="font-family:'Space Grotesk'; color:var(--nexus-cyan); font-size:2.5rem; font-weight:700;">Plano Agência IA Dedicada</h2>
+                        <div class="pricing-val">R$ 3.497 <span>/mês</span></div>
+                        <p style="color: rgba(255,255,255,0.7); font-family:'Space Grotesk'; font-weight: 700; letter-spacing: 1px; margin-top: 10px;">SETUP TÉCNICO ONBOARDING: R$ 5.000 (Taxa Única)</p>
+                        <div style="display: flex; justify-content: center; gap: 40px; margin-top: 25px; font-size: 1rem; color: #fff; font-family:'Space Grotesk';">
+                            <span>■ Agentes Ilimitados</span>
+                            <span>■ Manutenção & Tunning</span>
+                            <span>■ Acesso aos Robôs Novos</span>
+                            <span>■ Suporte Dedicado</span>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top: 30px; font-size: 0.95rem; text-align: center; color: #a0a0b0;">Substitua o custo de uma agência de R$ 8.000+ e de um time operacional de R$ 10.000+ por um único ecossistema centralizado.</p>
+            </div>
+
+            <!-- SLIDE 7: PRÓXIMOS PASSOS -->
+            <div class="slide">
+                <span class="label">IMPLEMENTAÇÃO</span>
+                <h1>Como será a <span>Nossa Parceria</span>?</h1>
+                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);">
+                    <div class="stat-card" style="border-bottom-color:var(--nexus-cyan);">
+                        <h3 style="color:var(--nexus-cyan); font-family:'Space Grotesk'; font-size:1.8rem;">D01</h3>
+                        <p style="font-family:'Inter'; font-weight: 700; margin-top: 15px; color:#fff;">Onboarding & Dados</p>
+                        <p style="font-size: 0.85rem; margin-top: 10px; color:#888;">Nós coletamos todo o material de apoio, apostilas da sua empresa, discursos de venda e acessos para treinar o cérebro da rede.</p>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color:var(--nexus-cyan);">
+                        <h3 style="color:var(--nexus-cyan); font-family:'Space Grotesk'; font-size:1.8rem;">D07</h3>
+                        <p style="font-family:'Inter'; font-weight: 700; margin-top: 15px; color:#fff;">Deploy do SDR Tático</p>
+                        <p style="font-size: 0.85rem; margin-top: 10px; color:#888;">Implantação do primeiro robô rodando ativamente e atendendo leads da empresa com calibragem em tempo real.</p>
+                    </div>
+                    <div class="stat-card" style="border-bottom-color:var(--nexus-cyan);">
+                        <h3 style="color:var(--nexus-cyan); font-family:'Space Grotesk'; font-size:1.8rem;">D15+</h3>
+                        <p style="font-family:'Inter'; font-weight: 700; margin-top: 15px; color:#fff;">Expansão Operacional</p>
+                        <p style="font-size: 0.85rem; margin-top: 10px; color:#888;">Ativação contínua da frota ilimitada: automação de Instagram, SEO blog, automações de cobrança e atendimento de dúvidas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SLIDE 8: CLOSING -->
+            <div class="slide">
+                <h1 style="font-size: 4.5rem;">Sua operação no modo <span>Automático.</span></h1>
+                <p style="font-size: 1.5rem; max-width: 800px; margin-top: 20px;">Menos margem de erro. Mais foco estratégico da sua diretoria. Inteligência garantida.</p>
+                <div style="margin-top: 50px; display: inline-block; padding: 20px 50px; background: var(--gradient); border-radius: 5px; color: var(--nexus-dark); font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.2rem; cursor:pointer;" onclick="openContract()">ASSINAR PROPOSTA</div>
+                <div style="margin-top: 50px; opacity: 0.3; font-size: 0.8rem; font-family: 'Space Grotesk', sans-serif; letter-spacing: 2px;">NEXUS AI SYSTEMS © DECK COMERCIAL RESERVADO</div>
+            </div>
+
+        </main>
+
+        <div class="controls">
+            <button class="btn" onclick="prev()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="btn" onclick="next()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- ======== CONTRACT MODAL ======== -->
+    <div class="modal-overlay" id="contractModal">
+        <div class="modal-container">
+            <button class="modal-close" onclick="closeContract()">&times;</button>
+
+            <!-- STEP 1: FORM -->
+            <div id="contractFormStep">
+                <span class="label">CONTRATO DE PRESTAÇÃO DE SERVIÇOS</span>
+                <h1 style="font-size: 2.5rem;">Dados do <span>Contratante</span></h1>
+                <p>Preencha as informações abaixo para gerar o contrato personalizado.</p>
+
+                <div class="contract-form">
+                    <div class="form-group">
+                        <label>Razão Social</label>
+                        <input type="text" id="cRazaoSocial" placeholder="Empresa Ltda." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Nome Fantasia</label>
+                        <input type="text" id="cNomeFantasia" placeholder="Nome público da empresa">
+                    </div>
+                    <div class="form-group">
+                        <label>CNPJ</label>
+                        <input type="text" id="cCNPJ" placeholder="00.000.000/0001-00">
+                    </div>
+                    <div class="form-group">
+                        <label>Representante Legal</label>
+                        <input type="text" id="cRepresentante" placeholder="Nome completo">
+                    </div>
+                    <div class="form-group">
+                        <label>CPF do Representante</label>
+                        <input type="text" id="cCPF" placeholder="000.000.000-00">
+                    </div>
+                    <div class="form-group">
+                        <label>E-mail Corporativo</label>
+                        <input type="email" id="cEmail" placeholder="contato@empresa.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Telefone / WhatsApp</label>
+                        <input type="text" id="cTelefone" placeholder="(41) 99999-9999">
+                    </div>
+                    <div class="form-group">
+                        <label>Endereço Completo</label>
+                        <input type="text" id="cEndereco" placeholder="Rua, nº, Bairro, Cidade - UF">
+                    </div>
+                    <div class="form-group">
+                        <label>Plano Selecionado</label>
+                        <select id="cPlano">
+                            <option value="Agência IA Dedicada — R$ 3.497/mês">Agência IA Dedicada — R$ 3.497/mês</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Vigência do Contrato</label>
+                        <select id="cVigencia">
+                            <option value="12 (doze) meses">12 meses</option>
+                            <option value="6 (seis) meses">6 meses</option>
+                            <option value="3 (três) meses">3 meses</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="btn-generate" id="btnGenerate" onclick="generateContract()">GERAR CONTRATO</button>
+            </div>
+
+            <!-- STEP 2: CONTRACT PREVIEW -->
+            <div class="contract-preview" id="contractPreviewStep">
+                <div class="contract-document" id="contractDocument">
+                    <!-- Populated by JS -->
+                </div>
+                <div class="btn-actions">
+                    <button class="btn-back" onclick="backToForm()">← VOLTAR AO FORMULÁRIO</button>
+                    <button class="btn-print" onclick="printContract()">IMPRIMIR / SALVAR PDF</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let current = 0;
+        const slides = document.querySelectorAll('.slide');
+        const sidebar = document.getElementById('sidebar');
+
+        // Create Navigation Dots dynamically
+        for(let i=0; i<slides.length; i++) {
+            const dot = document.createElement('div');
+            dot.className = `nav-dot ${i === 0 ? 'active' : ''}`;
+            dot.innerText = i < 9 ? `0${i+1}` : i+1;
+            dot.onclick = () => jump(i);
+            sidebar.appendChild(dot);
+        }
+
+        const navDots = document.querySelectorAll('.nav-dot');
+
+        function update() {
+            slides.forEach((s, i) => s.classList.toggle('active', i === current));
+            navDots.forEach((d, i) => d.classList.toggle('active', i === current));
+        }
+
+        function next() { if (current < slides.length - 1) { current++; update(); } }
+        function prev() { if (current > 0) { current--; update(); } }
+        function jump(i) { current = i; update(); }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('contractModal').classList.contains('active')) return;
+            if (e.key === 'ArrowRight' || e.key === ' ') next();
+            if (e.key === 'ArrowLeft') prev();
+        });
+
+        // ===== CONTRACT SYSTEM =====
+        function openContract() {
+            document.getElementById('contractModal').classList.add('active');
+            document.getElementById('contractFormStep').style.display = 'block';
+            document.getElementById('contractPreviewStep').classList.remove('active');
+        }
+
+        function closeContract() {
+            document.getElementById('contractModal').classList.remove('active');
+        }
+
+        function backToForm() {
+            document.getElementById('contractFormStep').style.display = 'block';
+            document.getElementById('contractPreviewStep').classList.remove('active');
+        }
+
+        function getToday() {
+            const d = new Date();
+            const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
+            return `${d.getDate()} de ${months[d.getMonth()]} de ${d.getFullYear()}`;
+        }
+
+        function generateContract() {
+            const razao = document.getElementById('cRazaoSocial').value || '[RAZÃO SOCIAL]';
+            const fantasia = document.getElementById('cNomeFantasia').value || razao;
+            const cnpj = document.getElementById('cCNPJ').value || '[CNPJ]';
+            const rep = document.getElementById('cRepresentante').value || '[REPRESENTANTE]';
+            const cpf = document.getElementById('cCPF').value || '[CPF]';
+            const email = document.getElementById('cEmail').value || '[E-MAIL]';
+            const tel = document.getElementById('cTelefone').value || '[TELEFONE]';
+            const end = document.getElementById('cEndereco').value || '[ENDEREÇO]';
+            const plano = document.getElementById('cPlano').value;
+            const vigencia = document.getElementById('cVigencia').value;
+            const hoje = getToday();
+
+            const html = `
+                <h2>CONTRATO DE PRESTAÇÃO DE SERVIÇOS<br>DE INTELIGÊNCIA ARTIFICIAL</h2>
+                <p class="contract-subtitle">Nexus AI Systems — Contrato N° ${Date.now().toString(36).toUpperCase()}</p>
+
+                <h3>CLÁUSULA 1 — DAS PARTES</h3>
+                <p><strong>CONTRATADA:</strong> NEXUS AI SYSTEMS, pessoa jurídica de direito privado, doravante denominada simplesmente <strong>"NEXUS"</strong>.</p>
+                <p><strong>CONTRATANTE:</strong> <span class="highlight-field">${razao}</span>, nome fantasia <span class="highlight-field">${fantasia}</span>, inscrita no CNPJ sob o nº <span class="highlight-field">${cnpj}</span>, neste ato representada por <span class="highlight-field">${rep}</span>, CPF nº <span class="highlight-field">${cpf}</span>, com endereço em <span class="highlight-field">${end}</span>, e-mail <span class="highlight-field">${email}</span>, telefone <span class="highlight-field">${tel}</span>.</p>
+
+                <h3>CLÁUSULA 2 — DO OBJETO</h3>
+                <p>O presente contrato tem por objeto a prestação de serviços de <strong>Inteligência Artificial Operacional</strong> pela NEXUS à CONTRATANTE, sob o modelo <strong>RaaS (Robots as a Service)</strong>, incluindo, mas não se limitando a:</p>
+                <p>a) Desenvolvimento, hospedagem e manutenção de Agentes de IA (SDR, FAQ, Social Media, SEO e demais módulos disponíveis no catálogo NEXUS);<br>
+                b) Configuração e tunning contínuo dos agentes conforme as necessidades operacionais da CONTRATANTE;<br>
+                c) Suporte técnico dedicado durante o horário comercial (Seg-Sex, 9h-18h).</p>
+
+                <h3>CLÁUSULA 3 — DA PROPRIEDADE INTELECTUAL</h3>
+                <p>Todos os agentes, algoritmos, modelos, prompts, fluxos de automação e infraestrutura técnica utilizados na prestação dos serviços são de <strong>propriedade exclusiva da NEXUS</strong>. A CONTRATANTE adquire unicamente o <strong>direito de uso</strong> dos serviços durante a vigência deste contrato.</p>
+                <p>Os dados comerciais, bases de conhecimento e conteúdos fornecidos pela CONTRATANTE para treinamento dos agentes permanecem como propriedade integral da CONTRATANTE.</p>
+
+                <h3>CLÁUSULA 4 — DO PLANO E INVESTIMENTO</h3>
+                <p>Plano contratado: <span class="highlight-field">${plano}</span></p>
+                <p><strong>Mensalidade:</strong> R$ 3.497,00 (três mil quatrocentos e noventa e sete reais), com vencimento todo dia 10 de cada mês subsequente ao início da prestação dos serviços.</p>
+                <p><strong>Setup Técnico (Taxa Única):</strong> R$ 5.000,00 (cinco mil reais), a ser pago antes do início do onboarding (D01).</p>
+                <p>Os valores poderão ser reajustados anualmente pelo IGPM/FGV ou índice substituto equivalente.</p>
+
+                <h3>CLÁUSULA 5 — DA VIGÊNCIA</h3>
+                <p>O presente contrato terá vigência de <span class="highlight-field">${vigencia}</span>, contados a partir da data de assinatura, renovando-se automaticamente por períodos iguais e sucessivos, salvo manifestação contrária de qualquer das partes com antecedência mínima de 30 (trinta) dias.</p>
+
+                <h3>CLÁUSULA 6 — DO ONBOARDING E ENTREGA</h3>
+                <p>Após a assinatura e pagamento do setup, a NEXUS iniciará o processo de implantação conforme o seguinte cronograma estimado:<br>
+                <strong>D01:</strong> Coleta de materiais, acessos e briefing operacional.<br>
+                <strong>D07:</strong> Deploy do primeiro agente ativo (SDR ou FAQ).<br>
+                <strong>D15+:</strong> Expansão do ecossistema com módulos adicionais.</p>
+
+                <h3>CLÁUSULA 7 — DA RESCISÃO</h3>
+                <p>Qualquer das partes poderá rescindir o presente contrato, sem justa causa, mediante aviso prévio por escrito com antecedência mínima de 30 (trinta) dias. Em caso de rescisão antecipada por parte da CONTRATANTE, será devida multa equivalente a 20% (vinte por cento) do valor remanescente do contrato.</p>
+                <p>Não haverá devolução do valor de Setup em nenhuma hipótese de rescisão.</p>
+
+                <h3>CLÁUSULA 8 — DA CONFIDENCIALIDADE</h3>
+                <p>As partes se comprometem a manter sigilo absoluto sobre todas as informações comerciais, técnicas e estratégicas de que tomarem conhecimento em razão da execução deste contrato, sob pena de responsabilização civil e criminal.</p>
+
+                <h3>CLÁUSULA 9 — DO FORO</h3>
+                <p>As partes elegem o foro da Comarca de Curitiba/PR para dirimir quaisquer controvérsias oriundas do presente instrumento, com renúncia expressa a qualquer outro, por mais privilegiado que seja.</p>
+
+                <p style="margin-top: 30px;">E, por estarem de acordo, as partes assinam o presente contrato em 2 (duas) vias de igual teor e forma, na presença das testemunhas abaixo.</p>
+                <p style="text-align: center; margin-top: 15px;">Curitiba/PR, <span class="highlight-field">${hoje}</span>.</p>
+
+                <div class="signature-area">
+                    <div>
+                        <div class="sig-line">NEXUS AI SYSTEMS<br><small>Contratada</small></div>
+                    </div>
+                    <div>
+                        <div class="sig-line">${rep}<br><small>${razao}<br>Contratante</small></div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('contractDocument').innerHTML = html;
+            document.getElementById('contractFormStep').style.display = 'none';
+            document.getElementById('contractPreviewStep').classList.add('active');
+        }
+
+        function printContract() {
+            const contractHTML = document.getElementById('contractDocument').innerHTML;
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="pt-br">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Contrato Nexus AI</title>
+                    <link rel="preconnect" href="https://fonts.googleapis.com">
+                    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
+                    <style>
+                        * { margin: 0; padding: 0; box-sizing: border-box; }
+                        body { background: #fff; color: #111; font-family: 'Inter', sans-serif; padding: 50px 60px; font-size: 11pt; line-height: 1.8; }
+                        h2 { font-family: 'Space Grotesk', sans-serif; color: #111; text-align: center; font-size: 1.5rem; margin-bottom: 5px; }
+                        .contract-subtitle { text-align: center; color: #666; font-size: 0.8rem; margin-bottom: 30px; }
+                        h3 { font-family: 'Space Grotesk', sans-serif; color: #333; margin-top: 25px; margin-bottom: 10px; font-size: 1rem; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+                        p { margin-bottom: 10px; text-align: justify; }
+                        .highlight-field { font-weight: 700; color: #7B61FF; }
+                        .signature-area { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-top: 50px; padding-top: 20px; text-align: center; }
+                        .sig-line { border-top: 1px solid #333; padding-top: 10px; margin-top: 80px; font-size: 0.8rem; color: #555; }
+                        @media print {
+                            body { padding: 30px 40px; }
+                            .highlight-field { color: #333; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${contractHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            // Wait for fonts to load before printing
+            setTimeout(() => {
+                printWindow.focus();
+                printWindow.print();
+            }, 600);
+        }
+    </script>
+</body>
+</html>
