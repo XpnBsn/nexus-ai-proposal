@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Social | Approval Room</title>
+    <title>Nexus Social | Approval Room v2.0</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Space+Grotesk:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -26,43 +26,50 @@
 
         .status-badge { padding: 6px 14px; border-radius: 100px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
         .status-pending { background: rgba(255, 159, 67, 0.1); color: #FF9F43; border: 1px solid rgba(255, 159, 67, 0.2); }
-        .status-draft { background: rgba(255, 255, 255, 0.05); color: #555; border: 1px solid rgba(255,255,255,0.1); }
+        .status-ready { background: rgba(0, 229, 160, 0.1); color: var(--green); border: 1px solid var(--green); }
 
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 30px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(430px, 1fr)); gap: 30px; }
         .post-card { background: var(--card); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; transition: 0.3s; position: relative; }
-        .post-card:not(.draft):hover { border-color: var(--accent); transform: translateY(-5px); }
+        .post-card:hover { border-color: var(--accent); }
         
-        .post-media { width: 100%; aspect-ratio: 1/1; background: #16161e; position: relative; }
+        .post-media { width: 100%; aspect-ratio: 1/1; background: #16161e; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .post-media img { width: 100%; height: 100%; object-fit: cover; }
         .post-info { padding: 25px; }
+        
         .post-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px; }
         .post-day { font-family: 'Space Grotesk', sans-serif; color: var(--green); font-size: 0.8rem; font-weight: 700; }
         .post-date { color: var(--muted); font-size: 0.7rem; display: block; margin-top: 2px; }
         .post-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 10px; color: #fff; }
 
-        .scheduling-info { display: flex; gap: 15px; margin-bottom: 20px; background: rgba(123, 97, 255, 0.05); padding: 10px; border-radius: 8px; border-left: 3px solid var(--accent); }
-        .s-item { font-size: 0.75rem; color: var(--text); }
-        .s-label { display: block; color: var(--accent); font-weight: 700; font-size: 0.6rem; text-transform: uppercase; margin-bottom: 2px; }
+        .scheduling-info { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .s-item { background: rgba(255, 255, 255, 0.03); padding: 8px; border-radius: 6px; }
+        .s-label { display: block; color: var(--muted); font-weight: 700; font-size: 0.55rem; text-transform: uppercase; margin-bottom: 2px; }
+        .s-val { font-size: 0.75rem; font-weight: 600; }
 
-        .caption-box { background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px; font-size: 0.85rem; color: var(--muted); line-height: 1.6; max-height: 120px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 20px; border: 1px solid var(--border); }
+        .caption-section { margin-top: 15px; }
+        .caption-label { font-size: 0.65rem; font-weight: 700; color: var(--green); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        .caption-box { background: rgba(0,0,0,0.4); padding: 15px; border-radius: 10px; font-size: 0.85rem; color: #ddd; line-height: 1.6; max-height: 140px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 15px; border: 1px solid var(--border); }
         
-        .actions { display: flex; gap: 10px; }
-        .btn-approve { flex: 1; padding: 12px; background: var(--green); color: #050508; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.85rem; }
-        .btn-approve:hover { filter: brightness(1.1); transform: scale(1.02); }
-        .btn-wa { padding: 12px; background: rgba(255,255,255,0.05); color: #fff; border-radius: 10px; border: 1px solid var(--border); font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 50px; }
+        .asset-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .btn-asset { padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.03); color: #fff; font-size: 0.75rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s; }
+        .btn-asset:hover { background: rgba(255,255,255,0.08); border-color: var(--accent); }
+        .btn-asset svg { width: 14px; height: 14px; }
 
-        .format-badge { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); padding: 5px 12px; border-radius: 5px; font-size: 0.65rem; color: #fff; font-weight: 700; z-index: 10; display: flex; align-items: center; gap: 5px; }
+        .actions { display: flex; gap: 10px; padding-top: 15px; border-top: 1px solid var(--border); }
+        .btn-approve { flex: 1; padding: 14px; background: var(--green); color: #050508; border-radius: 10px; border: none; font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 0.85rem; text-transform: uppercase; }
+        .btn-approve:hover { filter: brightness(1.1); transform: scale(1.01); box-shadow: 0 0 20px rgba(0, 229, 160, 0.2); }
+        .btn-wa { padding: 14px; background: rgba(255,255,255,0.05); color: #fff; border-radius: 10px; border: 1px solid var(--border); font-weight: 600; cursor: pointer; width: 50px; display:flex; align-items:center; justify-content:center; }
 
-        .draft { opacity: 0.4; pointer-events: none; }
-        .draft-overlay { position: absolute; inset:0; display: flex; align-items: center; justify-content: center; z-index: 20; }
-        .draft-text { background: #000; padding: 10px 20px; border-radius: 50px; font-size: 0.8rem; font-weight: 700; color: #888; border: 1px solid #333; }
-
+        .format-badge { position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); padding: 5px 12px; border-radius: 5px; font-size: 0.65rem; color: #fff; font-weight: 700; z-index: 10; border: 1px solid rgba(255,255,255,0.1); }
+        
+        .empty-state { text-align: center; color: var(--muted); }
+        .empty-state p { font-size: 0.8rem; margin-top: 10px; }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">NEXUS SOCIAL <span>Approval Room / Semana 01</span></div>
+        <div class="brand">NEXUS SOCIAL <span>Builder & Approval Room</span></div>
         <div style="text-align: right">
             <p style="font-size: 0.7rem; color: var(--muted); margin-bottom: 5px;">GERENTE GERAL: ANTIGRAVITY</p>
             <p style="font-size: 0.8rem; font-weight: 600; color: var(--green);">CICLO: 20 ABR - 26 ABR</p>
@@ -70,34 +77,42 @@
     </header>
 
     <div class="grid">
-        <!-- DIA 01 -->
+        <!-- DIA 01 (REFERÊNCIA VISUAL) -->
         <div class="post-card">
+            <span class="format-badge">📽️ REEL / VIDEO</span>
             <div class="post-media">
-                <span class="format-badge">🎞️ REEL / VIDEO</span>
-                <img src="day-01.png" alt="Post 01">
+                <img src="day-01.png" alt="Referência Visual">
             </div>
             <div class="post-info">
                 <div class="post-header">
                     <div>
-                        <span class="post-day">SEGUNDA-FEIRA</span>
-                        <span class="post-date">20 de Abril</span>
+                        <span class="post-day">SEGUNDA-FEIRA (Ref. Visual)</span>
                         <h3 class="post-title">O Manifesto Nexus</h3>
                     </div>
-                    <span class="status-badge status-pending">Pendente</span>
+                    <span class="status-badge status-ready">Pronto</span>
                 </div>
                 
                 <div class="scheduling-info">
-                    <div class="s-item"><span class="s-label">Melhor Horário</span>09:00 AM</div>
-                    <div class="s-item"><span class="s-label">Objetivo</span>Alcance / Topo de Funil</div>
+                    <div class="s-item"><span class="s-label">Horário</span>09:00 AM</div>
+                    <div class="s-item"><span class="s-label">Engajamento</span>Topo de Funil</div>
                 </div>
 
-                <div class="caption-box">Headline: A era da operação empresarial autônoma começou. 🚀
+                <div class="caption-section">
+                    <span class="caption-label">Legenda (Copy PHD):</span>
+                    <div class="caption-box">A nova era da operação empresarial começou. 🚀
 
-A Nexus AI não é apenas uma agência. Somos o seu exército invisível...
+A Nexus AI não é apenas uma agência. Somos o seu exército invisível de agentes de inteligência artificial, projetados para fazer o trabalho pesado enquanto você foca na estratégia.
 
-[Roteiro Motion]: Zoom in lento, partículas bio-luminescentes, texto flutuante linear.</div>
+[Roteiro Video]: Zoom in nas partículas bio-luminescentes, texto flutuante em neon.</div>
+                </div>
+
+                <div class="asset-actions">
+                    <button class="btn-asset">🤖 Regerar com IA</button>
+                    <button class="btn-asset">📤 Alterar Ativo</button>
+                </div>
+
                 <div class="actions">
-                    <button class="btn-approve">APROVAR E AGENDAR</button>
+                    <button class="btn-approve">Aprovar e Agendar</button>
                     <button class="btn-wa">💬</button>
                 </div>
             </div>
@@ -105,31 +120,41 @@ A Nexus AI não é apenas uma agência. Somos o seu exército invisível...
 
         <!-- DIA 02 -->
         <div class="post-card">
+            <span class="format-badge">📑 CARROSSEL</span>
             <div class="post-media">
-                <span class="format-badge">📑 CARROSSEL (6 SLIDES)</span>
-                <img src="day-02.png" alt="Post 02">
+                 <div class="empty-state">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <p>Aguardando Definição de Ativo</p>
+                 </div>
             </div>
             <div class="post-info">
                 <div class="post-header">
                     <div>
                         <span class="post-day">TERÇA-FEIRA</span>
-                        <span class="post-date">21 de Abril</span>
                         <h3 class="post-title">Maestria da Simplicidade</h3>
                     </div>
                     <span class="status-badge status-pending">Pendente</span>
                 </div>
 
                 <div class="scheduling-info">
-                    <div class="s-item"><span class="s-label">Melhor Horário</span>12:00 PM</div>
-                    <div class="s-item"><span class="s-label">Objetivo</span>Autoridade / Educação</div>
+                    <div class="s-item"><span class="s-label">Horário</span>12:00 PM</div>
+                    <div class="s-item"><span class="s-label">Engajamento</span>Autoridade</div>
                 </div>
 
-                <div class="caption-box">Headline: Complexidade por dentro. Lucratividade por fora. 📊
+                <div class="caption-section">
+                    <span class="caption-label">Legenda (Copy PHD):</span>
+                    <div class="caption-box">Complexidade por dentro. Lucratividade por fora. 📊
 
-[Slide 01]: Hook visual
-[Slide 02]: O problema da desorganização...</div>
+Dados não valem nada se não forem convertidos em inteligência...</div>
+                </div>
+
+                <div class="asset-actions">
+                    <button class="btn-asset" style="background: var(--accent); color: white; border-color: var(--accent);">🤖 Gerar Imagem com IA</button>
+                    <button class="btn-asset">📤 Importar Arte/Vídeo</button>
+                </div>
+
                 <div class="actions">
-                    <button class="btn-approve">APROVAR E AGENDAR</button>
+                    <button class="btn-approve" style="opacity: 0.3; cursor: not-allowed">Aprovar e Agendar</button>
                     <button class="btn-wa">💬</button>
                 </div>
             </div>
@@ -137,73 +162,43 @@ A Nexus AI não é apenas uma agência. Somos o seu exército invisível...
 
         <!-- DIA 03 -->
         <div class="post-card">
+            <span class="format-badge">🖼️ ESTÁTICO</span>
             <div class="post-media">
-                <span class="format-badge">🖼️ ESTÁTICO</span>
-                <img src="day-03.png" alt="Post 03">
+                 <div class="empty-state">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <p>Aguardando Inteligência</p>
+                 </div>
             </div>
             <div class="post-info">
                 <div class="post-header">
                     <div>
                         <span class="post-day">QUARTA-FEIRA</span>
-                        <span class="post-date">22 de Abril</span>
                         <h3 class="post-title">Nexus SDR em Ação</h3>
                     </div>
                     <span class="status-badge status-pending">Pendente</span>
                 </div>
 
                 <div class="scheduling-info">
-                    <div class="s-item"><span class="s-label">Melhor Horário</span>18:00 PM</div>
-                    <div class="s-item"><span class="s-label">Objetivo</span>Conversão / Desejo</div>
+                    <div class="s-item"><span class="s-label">Horário</span>18:00 PM</div>
+                    <div class="s-item"><span class="s-label">Engajamento</span>Conversão</div>
                 </div>
 
-                <div class="caption-box">Headline: Ele nunca cansa. Ele nunca esquece. 💬⚡
+                <div class="caption-section">
+                    <span class="caption-label">Legenda (Copy PHD):</span>
+                    <div class="caption-box">Ele nunca cansa. Ele nunca esquece. Ele nunca para de vender. 💬⚡
 
 Imagine um vendedor sênior que conhece...</div>
+                </div>
+
+                <div class="asset-actions">
+                    <button class="btn-asset" style="background: var(--accent); color: white; border-color: var(--accent);">🤖 Gerar Imagem com IA</button>
+                    <button class="btn-asset">📤 Importar Arte/Vídeo</button>
+                </div>
+
                 <div class="actions">
-                    <button class="btn-approve">APROVAR E AGENDAR</button>
+                    <button class="btn-approve" style="opacity: 0.3; cursor: not-allowed">Aprovar e Agendar</button>
                     <button class="btn-wa">💬</button>
                 </div>
-            </div>
-        </div>
-
-        <!-- PLACEHOLDERS 04-07 -->
-        <div class="post-card draft">
-            <div class="draft-overlay"><span class="draft-text">EM PRODUÇÃO</span></div>
-            <div class="post-media"></div>
-            <div class="post-info">
-                <span class="post-day">QUINTA-FEIRA</span>
-                <h3 class="post-title">Nexus Tráfego Pago</h3>
-                <span class="status-badge status-draft">Rascunho</span>
-            </div>
-        </div>
-
-        <div class="post-card draft">
-            <div class="draft-overlay"><span class="draft-text">EM PRODUÇÃO</span></div>
-            <div class="post-media"></div>
-            <div class="post-info">
-                <span class="post-day">SEXTA-FEIRA</span>
-                <h3 class="post-title">Recrutamento de Robôs (RH)</h3>
-                <span class="status-badge status-draft">Rascunho</span>
-            </div>
-        </div>
-
-        <div class="post-card draft">
-             <div class="draft-overlay"><span class="draft-text">EM PRODUÇÃO</span></div>
-             <div class="post-media"></div>
-            <div class="post-info">
-                <span class="post-day">SÁBADO</span>
-                <h3 class="post-title">Bastidores do Cérebro</h3>
-                <span class="status-badge status-draft">Rascunho</span>
-            </div>
-        </div>
-
-        <div class="post-card draft">
-             <div class="draft-overlay"><span class="draft-text">EM PRODUÇÃO</span></div>
-             <div class="post-media"></div>
-            <div class="post-info">
-                <span class="post-day">DOMINGO</span>
-                <h3 class="post-title">Convite VIP Nexus</h3>
-                <span class="status-badge status-draft">Rascunho</span>
             </div>
         </div>
 
