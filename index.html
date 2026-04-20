@@ -339,8 +339,9 @@
                 <div class="pricing-single-box" style="grid-template-columns: 1fr;">
                     <div style="text-align: center;">
                         <h2 style="font-family:'Space Grotesk'; color:var(--nexus-cyan); font-size:2.5rem; font-weight:700;">Plano Agência IA Dedicada</h2>
-                        <div class="pricing-val">R$ 4.497 <span>/mês</span></div>
-                        <p style="color: rgba(255,255,255,0.7); font-family:'Space Grotesk'; font-weight: 700; letter-spacing: 1px; margin-top: 10px;">SETUP TÉCNICO ONBOARDING: R$ 5.000 (Taxa Única)</p>
+                        <div class="pricing-val">R$ 2.248 <span>/mês</span></div>
+                        <p style="text-decoration: line-through; color: #ff6b6b; font-family:'Space Grotesk'; margin-top: 5px;">De R$ 4.497/mês (50% OFF)</p>
+                        <p style="color: rgba(255,255,255,0.7); font-family:'Space Grotesk'; font-weight: 700; letter-spacing: 1px; margin-top: 10px;">SETUP TÉCNICO ONBOARDING: R$ 2.500 (Taxa Única promocional)</p>
                         <div class="pricing-benefits">
                             <span>■ Agentes Dedicados</span>
                             <span>■ Manutenção & Tunning</span>
@@ -448,7 +449,7 @@
                     <div class="form-group">
                         <label>Plano Selecionado</label>
                         <select id="cPlano">
-                            <option value="Agência IA Dedicada — R$ 4.497/mês">Agência IA Dedicada — R$ 4.497/mês</option>
+                            <option value="Agência IA Dedicada — R$ 2.248/mês (50% OFF)">Agência IA Dedicada — R$ 2.248/mês</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -595,21 +596,21 @@
             const hoje = getToday();
 
             // Cálculo dos valores
-            const setupTotal = 5000;
-            const mensalBase = 4497;
+            const setupTotal = 2500;
+            const mensalBase = 2248.50;
             let clausulaPagamento = '';
             let valorMensalFinal = mensalBase;
 
             if (metodo === 'PIX') {
                 clausulaPagamento = `
-                    <p><strong>Mensalidade:</strong> R$ 4.497,00 (quatro mil quatrocentos e noventa e sete reais), com vencimento todo dia 10 de cada mês subsequente ao início da prestação dos serviços.</p>
-                    <p><strong>Setup Técnico (Taxa Única):</strong> R$ 5.000,00 (cinco mil reais), a ser pago antes do início do onboarding (D01) via transferência PIX.</p>
+                    <p><strong>Mensalidade (PROMO 50% OFF):</strong> R$ 2.248,00 (dois mil duzentos e quarenta e oito reais), com vencimento todo dia 10 de cada mês subsequente ao início da prestação dos serviços.</p>
+                    <p><strong>Setup Técnico (PROMO 50% OFF):</strong> R$ 2.500,00 (dois mil e quinhentos reais), a ser pago antes do início do onboarding (D01) via transferência PIX.</p>
                 `;
             } else {
                 const setupParcela = setupTotal / vigenciaNum;
                 valorMensalFinal = mensalBase + setupParcela;
                 clausulaPagamento = `
-                    <p><strong>Pagamento Recorrente:</strong> R$ ${valorMensalFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} (mensais), contemplando a mensalidade de serviços (R$ 4.497,00) acrescida da diluição da Taxa de Setup Técnico (R$ 5.000,00) parcelada em ${vigenciaNum} vezes sem juros.</p>
+                    <p><strong>Pagamento Recorrente:</strong> R$ ${valorMensalFinal.toLocaleString('pt-BR', {minimumFractionDigits: 2, maximumFractionDigits: 2})} (mensais), contemplando a mensalidade de serviços com desconto (R$ 2.248,00) acrescida da diluição da Taxa de Setup com desconto (R$ 2.500,00) parcelada em ${vigenciaNum} vezes sem juros.</p>
                     <p>O pagamento será realizado via Cartão de Crédito recorrente, com a primeira cobrança efetuada na data de aceite deste termo.</p>
                 `;
             }
